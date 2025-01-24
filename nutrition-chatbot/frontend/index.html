@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nutrition Chatbot</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: #f4f4f4; 
+        }
+        #chat-container { 
+            height: 500px; 
+            border: 1px solid #ccc; 
+            overflow-y: scroll; 
+            background-color: white; 
+            padding: 10px; 
+            margin-bottom: 10px; 
+        }
+        .message { 
+            margin-bottom: 10px; 
+            padding: 8px; 
+            border-radius: 4px; 
+        }
+        .user { background-color: #e6f2ff; text-align: right; }
+        .bot { background-color: #f0f0f0; text-align: left; }
+        #filter-buttons { 
+            display: flex; 
+            justify-content: space-around; 
+            margin-bottom: 10px; 
+        }
+        #chat-input { 
+            width: 100%; 
+            padding: 10px; 
+            margin-top: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <div id="filter-buttons">
+        <button onclick="filterProducts('Milk')">Milk-Free</button>
+        <button onclick="filterProducts('Soy')">Soy-Free</button>
+        <button onclick="filterProducts('Wheat')">Wheat-Free</button>
+    </div>
+    <div id="chat-container" id="chat-log"></div>
+    <input type="text" id="chat-input" placeholder="Ask about products..." onkeypress="handleInput(event)">
+
+    <script>
+        const backendUrl = 'http://127.0.0.1:5000';
+        const chatContainer = document.getElementById('chat-container');
+
+        function displayMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function handleInput(event) {
+            if (event.key === 'Enter') {
+                const input = document.getElementById('chat-input');
+                const query = input.value.trim();
+                if (query) {
+                    displayMessage(query, 'user');
+                    processQuery(query);
+                    input.value = '';
+                }
+            }
+        }
+
+        function processQuery(query) {
+            fetch(`${backendUrl}/get_product_info?name=${encodeURIComponent(query)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        displayMessage('Sorry, I could not find that product.', 'bot');
+                    } else {
+                        const details = `
+Product: ${data.product_name}
+Category: ${data.category}
+Flavor: ${data.flavor || 'N/A'}
+Allergens: ${data.allergens.join(', ')}
+Ingredients: ${data.ingredients.join(', ')}`;
+                        displayMessage(details, 'bot');
+                    }
+                })
+                .catch(error => {
+                    displayMessage('Error processing request.', 'bot');
+                });
+        }
+
+        function filterProducts(allergen) {
+            fetch(`${backendUrl}/filter_products?allergens=${encodeURIComponent(allergen)}`)
+                .then(response => response.json())
+                .then(products => {
+                    const productNames = products.map(p => p.product_name).join('\n');
+                    displayMessage(`${allergen}-Free Products:\n${productNames}`, 'bot');
+                });
+        }
+    </script>
+</body>
+</html>

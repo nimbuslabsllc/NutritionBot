@@ -1,0 +1,28 @@
+[
+  {
+    "product_name": "Vanilla Cold Brew with Sweet Cold Foam - Large",
+    "category": "Cold Brew Coffee",
+    "flavor": "Vanilla",
+    "ingredients": [
+      "Cold Brew Coffee",
+      "Sweet Cold Foam",
+      "Vanilla Flavor"
+    ],
+    "allergens": ["Milk", "Soy"],
+    "detailed_ingredients": "Cold Brew Coffee: Steeped Arabica Coffee; Sweet Cold Foam: Skim Milk, Sugar, Cream, Soy Lecithin, Natural Flavors"
+  },
+  {
+    "product_name": "Apple Cider Donut",
+    "category": "Donuts",
+    "flavor": "Apple Cider",
+    "ingredients": [
+      "Enriched Wheat Flour",
+      "Soybean Oil",
+      "Nonfat Milk",
+      "Egg Yolks",
+      "Apple Juice Powder"
+    ],
+    "allergens": ["Eggs", "Milk", "Soy", "Wheat"],
+    "detailed_ingredients": "Donut Mix: Enriched Wheat Flour, Sugar, Soybean Oil, Nonfat Milk, Egg Yolks, Apple Juice Powder"
+  }
+]
